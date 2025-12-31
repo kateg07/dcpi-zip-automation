@@ -42,34 +42,29 @@ def copy_dcpi(src, dest):
         shutil.rmtree(drugcheck_path)
 
 
-    # Modify header.js variable from 0 to 1 for live server deployment
-    header_js = os.path.join(dest, "gen_page", "header.js")
-    if os.path.exists(header_js):
-        with open(header_js, "r", encoding="utf-8") as f:
-            content = f.read()
-
-        # Replace first occurence of = 0; with = 1; (adjust pattern if variable name is known)
-        content = re.sub(r"=(\s*)0;", "= 1;", content, count=1)
-
-        with open(header_js, "w", encoding="utf-8") as f:
-            f.write(content)
-
-
-    # Modify medical_app.js variable from 0 to 1 for live server deployment 
+    # Modify header.js and for medical_app.js variable from 0 to 1 for live server deployment
+    header_js = os.path.join(dest, "gen_page", "header.js") 
     medical_app_js = os.path.join(dest, "medical_app", "medical_app.js")
-    if os.path.exists(medical_app_js):
-        with open(medical_app_js, "r", encoding="utf-8") as f:
-            content = f.read()
 
-        # Replace first occurence of = 0; with = 1; (adjust pattern if variable name is known)
-        content = re.sub(r"=(\s*)0;", "= 1;", content, count=1)
+    changing_variable_in_file(header_js)
+    changing_variable_in_file(medical_app_js)
 
-        with open(medical_app_js, "w", encoding="utf-8") as f:
-            f.write(content)
 
     print("DCPI folder copied successfully with exclusions!")
 
 
+
+
+def changing_variable_in_file(file_path):
+    if os.path.exists(file_path):
+        with open(file_path, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        # Replace first occurence of = 0; with = 1; (adjust pattern if variable name is known)
+        content = re.sub(r"=(\s*)0;", "= 1;", content, count=1)
+
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(content)
 
 
 def zip_dcpi_folder(folder_path, zip_name):
